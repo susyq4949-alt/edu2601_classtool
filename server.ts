@@ -21,10 +21,10 @@ async function startServer() {
         return res.status(400).json({ error: "키워드를 입력해 주세요." });
       }
 
-      const apiKey = process.env.GEMINI_API_KEY;
+      const apiKey = process.env.Gemini_API_Key || process.env.GEMINI_API_KEY;
       if (!apiKey) {
         return res.status(500).json({ 
-          error: "서버에 GEMINI_API_KEY 설정이 비어 있습니다. Settings > Secrets를 확인해 주세요." 
+          error: "서버에 Gemini_API_Key 설정이 비어 있습니다. Settings > Secrets를 확인해 주세요." 
         });
       }
 
