@@ -50,6 +50,20 @@ export default async function handler(req: any, res: any) {
     return res.status(200).json({ content: generatedText.trim().replace(/^["']|["']$/g, "") });
   } catch (err: any) {
     console.error("Gemini API Error on Vercel Serverless Function:", err);
-    return res.status(500).json({ error: err.message || "알림장 생성 도중 오류가 발생했습니다." });
+    let errorMsg = err.message || "알림장 생성 도중 오류가 발생했습니다.";
+    
+    // If the error message or object stringified shows that the API Key has expired or is invalid
+    const errStr = JSON.stringify(err);
+    if (
+      errorMsg.includes("expired") || 
+      errorMsg.includes("API key") || 
+      errorMsg.includes("API_KEY_INVALID") ||
+      errStr.includes("expired") ||
+      errStr.includes("API_KEY_INVALID")
+    ) {
+      errorMsg = "API 키가 만료되었거나 올바르지 않습니다. Vercel 프로젝트 대시보드의 [Settings] > [Environment Variables] 메뉴에서 'Gemini_API_Key' 값을 사용 가능한 유효한 API 키로 업데이트해 주세요! 🔑✨";
+    }
+
+    return res.status(500).json({ error: errorMsg });
   }
 }

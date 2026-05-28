@@ -51,7 +51,21 @@ async function startServer() {
       res.json({ content: generatedText.trim().replace(/^["']|["']$/g, "") });
     } catch (err: any) {
       console.error("Gemini API Error:", err);
-      res.status(500).json({ error: err.message || "알림장 생성 도중 오류가 발생했습니다." });
+      let errorMsg = err.message || "알림장 생성 도중 오류가 발생했습니다.";
+      
+      // If the error message or object stringified shows that the API Key has expired or is invalid
+      const errStr = JSON.stringify(err);
+      if (
+        errorMsg.includes("expired") || 
+        errorMsg.includes("API key") || 
+        errorMsg.includes("API_KEY_INVALID") ||
+        errStr.includes("expired") ||
+        errStr.includes("API_KEY_INVALID")
+      ) {
+        errorMsg = "API 키가 만료되었거나 올바르지 않습니다. AI Studio 우측 상단의 [Settings] > [Secrets] 메뉴(혹은 Vercel 환경 변수 설정)에서 'Gemini_API_Key' 값을 새롭고 신선한 활성 API 키로 교체/재등록해 주세요! 🔑✨";
+      }
+      
+      res.status(500).json({ error: errorMsg });
     }
   });
 
