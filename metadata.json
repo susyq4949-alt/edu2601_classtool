@@ -1,0 +1,6 @@
+{
+  "name": "수얌쌤의 다했어교실",
+  "description": "수얌쌤과 함께하는 초등학교 학급운영 웹페이지! 다했어요 게시판, 오늘의 할 일, 칭찬 온도계 등 귀엽고 알찬 우리반 공간입니다.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
