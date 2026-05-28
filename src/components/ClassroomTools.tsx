@@ -176,6 +176,15 @@ export default function ClassroomTools({
         },
         body: JSON.stringify({ keywords: aiKeywords }),
       });
+
+      // Vercel / serverless environment safety parsing
+      const contentType = res.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const textFallback = await res.text();
+        console.error("Non-JSON Response received:", textFallback);
+        throw new Error("서버로부터 올바른 JSON 응답을 받지 못했습니다. Vercel 배포 시 Environment Variables(Secrets) 설정에 Gemini_API_Key 또는 GEMINI_API_KEY가 등록되어 있는지 다시 확인해 주세요.");
+      }
+
       const data = await res.json();
       if (!res.ok) {
         throw new Error(data.error || "알림장 생성에 실패했습니다.");
